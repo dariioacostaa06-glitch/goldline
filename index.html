@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>GoldLine — Joyería Artesanal en Córdoba</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+:root{--accent:#eab308;--accent2:#ca8a04}
+*{font-family:'Inter',sans-serif}
+body{background:#08070a;color:#f0f0f0}
+.glass{background:rgba(255,255,255,.04);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.08)}
+.accent{color:var(--accent)}
+.accent-bg{background:var(--accent)}
+.btn-primary{background:var(--accent);color:#000;font-weight:700;transition:all .2s;border-radius:12px;padding:14px 28px}
+.btn-primary:hover{background:var(--accent2);transform:translateY(-2px);box-shadow:0 10px 30px -8px rgba(234,179,8,.55)}
+.card{background:#111;border:1px solid #1f1f1f;border-radius:20px;transition:all .3s}
+.card:hover{border-color:var(--accent);transform:translateY(-4px)}
+.opt{background:#0e0e0e;border:1px solid #232323;border-radius:14px;transition:all .2s;cursor:pointer}
+.opt:hover{border-color:#3a3a3a}
+.opt.active{border-color:var(--accent);background:rgba(234,179,8,.08);box-shadow:0 0 0 1px var(--accent) inset}
+.fade-in{animation:fadeIn .4s ease both}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulsePrice{0%{transform:scale(1)}40%{transform:scale(1.08)}100%{transform:scale(1)}}
+.pulse{animation:pulsePrice .35s ease}
+.ring-shape{border-radius:9999px}
+::-webkit-scrollbar{width:10px}
+::-webkit-scrollbar-track{background:#0a0a0a}
+::-webkit-scrollbar-thumb{background:#262626;border-radius:8px}
+</style>
+</head>
+<body class="antialiased">
+
+<!-- NAV -->
+<nav class="fixed top-0 inset-x-0 z-50 glass">
+  <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl accent-bg flex items-center justify-center font-extrabold text-black text-lg">GL</div>
+      <span class="font-bold text-lg tracking-wide">Gold<span class="accent">Line</span></span>
+    </div>
+    <div class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-300">
+      <a href="#configurador" class="hover:text-white transition">Configurador</a>
+      <a href="#colecciones" class="hover:text-white transition">Colecciones</a>
+      <a href="#testimonios" class="hover:text-white transition">Testimonios</a>
+      <a href="#contacto" class="hover:text-white transition">Contacto</a>
+    </div>
+    <a href="#configurador" class="btn-primary text-sm">Diseña tu joya</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="pt-40 pb-24 px-6">
+  <div class="max-w-5xl mx-auto text-center">
+    <span class="inline-block glass px-4 py-1.5 rounded-full text-xs uppercase tracking-[0.2em] text-gray-300 mb-6">Joyería artesanal · Córdoba</span>
+    <h1 class="text-4xl md:text-6xl font-extrabold leading-tight mb-6">
+      Tu joya, diseñada por ti.<br/>Presentada <span class="accent">en privado</span>, en nuestro taller.
+    </h1>
+    <p class="text-gray-400 text-lg max-w-2xl mx-auto mb-10">
+      En GoldLine convertimos tus ideas en piezas únicas hechas a mano. Configura tu joya online,
+      reserva una cita privada y deja que nuestro joyero te la presente personalmente, copa de cava incluida.
+    </p>
+    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+      <a href="#configurador" class="btn-primary text-center">💍 Empezar a diseñar</a>
+      <a href="#colecciones" class="glass px-7 py-3.5 rounded-xl font-semibold text-center hover:bg-white/10 transition">Ver colecciones</a>
+    </div>
+  </div>
+</header>
+
+<!-- CONFIGURADOR -->
+<section id="configurador" class="py-20 px-6">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-14">
+      <span class="text-xs uppercase tracking-[0.25em] accent font-semibold">Feature exclusiva</span>
+      <h2 class="text-3xl md:text-5xl font-extrabold mt-3">Configurador de joyas</h2>
+      <p class="text-gray-400 mt-4 max-w-2xl mx-auto">Elige cada detalle y observa tu pieza cobrar forma al instante, con su precio actualizado en tiempo real.</p>
+    </div>
+
+    <div class="grid lg:grid-cols-2 gap-10 items-start">
+      <!-- Vista previa -->
+      <div class="card p-8 lg:sticky lg:top-28">
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="font-bold text-xl">Vista previa</h3>
+          <span class="text-xs text-gray-500 uppercase tracking-wider" id="piezaLabel">Anillo</span>
+        </div>
+        <div class="h-72 flex items-center justify-center relative" id="previewStage">
+          <!-- piezas dibujadas por JS -->
+        </div>
+        <div class="mt-8 flex items-end justify-between">
+          <div>
+            <p class="text-xs text-gray-500 uppercase tracking-widest mb-1">Precio estimado</p>
+            <p class="text-4xl font-extrabold accent" id="precioTotal">0 €</p>
+          </div>
+          <div class="text-right text-sm text-gray-400" id="resumenSel">
+            Selecciona tus opciones
+          </div>
+        </div>
+      </div>
+
+      <!-- Opciones -->
+      <div class="space-y-8">
+        <!-- Tipo de pieza -->
+        <div>
+          <h4 class="font-semibold mb-3 text-gray-200">1. Tipo de pieza</h4>
+          <div class="grid grid-cols-3 gap-3" id="tipoOptions">
+            <button data-tipo="anillo" data-base="180" class="opt p-4 flex flex-col items-center gap-2">
+              <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="20" cy="24" r="11"/>
+                <path d="M14 14 L20 6 L26 14 Z"/>
+              </svg>
+              <span class="text-sm font-medium">Anillo</span>
+              <span class="text-xs text-gray-500">desde 180 €</span>
+            </button>
+            <button data-tipo="collar" data-base="240" class="opt p-4 flex flex-col items-center gap-2">
+              <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M8 8 C8 22 32 22 32 8" />
+                <circle cx="20" cy="26" r="4"/>
+              </svg>
+              <span class="text-sm font-medium">Collar</span>
+              <span class="text-xs text-gray-500">desde 240 €</span>
+            </button>
+            <button data-tipo="pulsera" data-base="160" class="opt p-4 flex flex-col items-center gap-2">
+              <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="2">
+                <ellipse cx="20" cy="20" rx="15" ry="9"/>
+                <circle cx="20" cy="11" r="2.4" fill="currentColor"/>
+              </svg>
+              <span class="text-sm font-medium">Pulsera</span>
+              <span class="text-xs text-gray-500">desde 160 €</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Metal -->
+        <div>
+          <h4 class="font-semibold mb-3 text-gray-200">2. Metal</h4>
+          <div class="grid grid-cols-3 gap-3" id="metalOptions">
+            <button data-metal="amarillo" data-extra="0" data-grad="linear-gradient(135deg,#fff6d6,#eab308,#92400e)" class="opt p-4 flex flex-col items-center gap-2">
+              <span class="w-8 h-8 rounded-full block" style="background:linear-gradient(135deg,#fff6d6,#eab308,#92400e)"></span>
+              <span class="text-sm font-medium">Oro amarillo</span>
+              <span class="text-xs text-gray-500">+0 €</span>
+            </button>
+            <button data-metal="blanco" data-extra="40" data-grad="linear-gradient(135deg,#f8fafc,#cbd5e1,#64748b)" class="opt p-4 flex flex-col items-center gap-2">
+              <span class="w-8 h-8 rounded-full block" style="background:linear-gradient(135deg,#f8fafc,#cbd5e1,#64748b)"></span>
+              <span class="text-sm font-medium">Oro blanco</span>
+              <span class="text-xs text-gray-500">+40 €</span>
+            </button>
+            <button data-metal="rosa" data-extra="30" data-grad="linear-gradient(135deg,#fde4e1,#f4a99b,#b76e79)" class="opt p-4 flex flex-col items-center gap-2">
+              <span class="w-8 h-8 rounded-full block" style="background:linear-gradient(135deg,#fde4e1,#f4a99b,#b76e79)"></span>
+              <span class="text-sm font-medium">Oro rosa</span>
+              <span class="text-xs text-gray-500">+30 €</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Piedra -->
+        <div>
+          <h4 class="font-semibold mb-3 text-gray-200">3. Piedra</h4>
+          <div class="grid grid-cols-4 gap-3" id="piedraOptions">
+            <button data-piedra="diamante" data-extra="220" data-color="#e5f3ff" class="opt p-3 flex flex-col items-center gap-2">
+              <span class="w-5 h-5 rounded-full block" style="background:#e5f3ff;box-shadow:0 0 10px 1px #ffffffaa"></span>
+              <span class="text-xs font-medium">Diamante</span>
+              <span class="text-[10px] text-gray-500">+220 €</span>
+            </button>
+            <button data-piedra="zafiro" data-extra="150" data-color="#3b82f6" class="opt p-3 flex flex-col items-center gap-2">
+              <span class="w-5 h-5 rounded-full block" style="background:#3b82f6;box-shadow:0 0 10px 1px #3b82f6aa"></span>
+              <span class="text-xs font-medium">Zafiro</span>
+              <span class="text-[10px] text-gray-500">+150 €</span>
+            </button>
+            <button data-piedra="esmeralda" data-extra="160" data-color="#10b981" class="opt p-3 flex flex-col items-center gap-2">
+              <span class="w-5 h-5 rounded-full block" style="background:#10b981;box-shadow:0 0 10px 1px #10b981aa"></span>
+              <span class="text-xs font-medium">Esmeralda</span>
+              <span class="text-[10px] text-gray-500">+160 €</span>
+            </button>
+            <button data-piedra="ninguna" data-extra="0" data-color="" class="opt p-3 flex flex-col items-center gap-2">
+              <span class="w-5 h-5 rounded-full block border border-gray-600"></span>
+              <span class="text-xs font-medium">Sin piedra</span>
+              <span class="text-[10px] text-gray-500">+0 €</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Grabado -->
+        <div>
+          <h4 class="font-semibold mb-3 text-gray-200">4. Grabado personalizado <span class="text-gray-500 font-normal">(opcional, +25 €)</span></h4>
+          <input id="grabadoInput" maxlength="20" type="text" placeholder="Ej: Para siempre, M&L"
+            class="w-full bg-[#0e0e0e] border border-[#262626] focus:border-[var(--accent)] outline-none rounded-xl px-4 py-3 text-sm transition"/>
+          <p class="text-xs text-gray-500 mt-2"><span id="contadorGrabado">20</span> caracteres restantes</p>
+        </div>
+
+        <button id="btnReservar" class="btn-primary w-full text-base mt-2">Reservar presentación privada</button>
+      </div>
+    </div>
+
+    <!-- Selector de franja VIP -->
+    <div id="vipPanel" class="hidden mt-10 card p-8 fade-in">
+      <h3 class="font-bold text-xl mb-2">Elige tu franja VIP de presentación</h3>
+      <p class="text-gray-400 text-sm mb-6">Tu joyero te recibirá en privado en nuestro taller del centro de Córdoba para mostrarte la pieza terminada.</p>
+      <div class="grid sm:grid-cols-2 gap-3" id="franjasOptions">
+        <button data-fecha="viernes 12 de junio" data-hora="11:00 h" class="opt p-4 text-left">
+          <p class="font-semibold">Viernes 12 de junio</p>
+          <p class="text-sm text-gray-400">11:00 h · Mañana, sala privada</p>
+        </button>
+        <button data-fecha="viernes 12 de junio" data-hora="18:30 h" class="opt p-4 text-left">
+          <p class="font-semibold">Viernes 12 de junio</p>
+          <p class="text-sm text-gray-400">18:30 h · Tarde, con cava</p>
+        </button>
+        <button data-fecha="sábado 13 de junio" data-hora="10:30 h" class="opt p-4 text-left">
+          <p class="font-semibold">Sábado 13 de junio</p>
+          <p class="text-sm text-gray-400">10:30 h · Mañana exclusiva</p>
+        </button>
+        <button data-fecha="sábado 13 de junio" data-hora="17:00 h" class="opt p-4 text-left">
+          <p class="font-semibold">Sábado 13 de junio</p>
+          <p class="text-sm text-gray-400">17:00 h · Tarde, con cava</p>
+        </button>
+      </div>
+      <button id="btnConfirmarCita" class="btn-primary mt-6 w-full sm:w-auto" disabled>Confirmar cita</button>
+      <div id="confirmacionMsg" class="hidden mt-6 glass rounded-xl p-5 fade-in"></div>
+    </div>
+  </div>
+</section>
+
+<!-- COLECCIONES -->
+<section id="colecciones" class="py-20 px-6 bg-[#0b0a0d]">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-14">
+      <span class="text-xs uppercase tracking-[0.25em] accent font-semibold">Catálogo</span>
+      <h2 class="text-3xl md:text-5xl font-extrabold mt-3">Nuestras colecciones</h2>
+      <p class="text-gray-400 mt-4 max-w-2xl mx-auto">Cada colección nace de la artesanía cordobesa, fusionando técnicas tradicionales de orfebrería con líneas contemporáneas.</p>
+    </div>
+    <div class="grid md:grid-cols-3 gap-6">
+      <div class="card p-7">
+        <div class="w-16 h-16 rounded-full mb-5" style="background:linear-gradient(135deg,#fff6d6,#eab308,#92400e)"></div>
+        <h3 class="font-bold text-lg mb-2">Línea Mezquita</h3>
+        <p class="text-gray-400 text-sm mb-4">Anillos y colgantes inspirados en los arcos califales, con grabados geométricos en oro de 18 quilates.</p>
+        <span class="text-xs uppercase tracking-wider text-gray-500">Desde 220 €</span>
+      </div>
+      <div class="card p-7">
+        <div class="w-16 h-16 rounded-full mb-5" style="background:linear-gradient(135deg,#f8fafc,#cbd5e1,#64748b)"></div>
+        <h3 class="font-bold text-lg mb-2">Línea Sereno</h3>
+        <p class="text-gray-400 text-sm mb-4">Piezas minimalistas en oro blanco con piedras de corte sencillo, perfectas para el día a día.</p>
+        <span class="text-xs uppercase tracking-wider text-gray-500">Desde 190 €</span>
+      </div>
+      <div class="card p-7">
+        <div class="w-16 h-16 rounded-full mb-5" style="background:linear-gradient(135deg,#fde4e1,#f4a99b,#b76e79)"></div>
+        <h3 class="font-bold text-lg mb-2">Línea Patio</h3>
+        <p class="text-gray-400 text-sm mb-4">Collares y pulseras en oro rosa con motivos florales, hechos a mano hilo a hilo en nuestro taller.</p>
+        <span class="text-xs uppercase tracking-wider text-gray-500">Desde 260 €</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIOS -->
+<section id="testimonios" class="py-20 px-6">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-14">
+      <span class="text-xs uppercase tracking-[0.25em] accent font-semibold">Lo que dicen</span>
+      <h2 class="text-3xl md:text-5xl font-extrabold mt-3">Clientes que confiaron en nosotros</h2>
+    </div>
+    <div class="grid md:grid-cols-3 gap-6">
+      <div class="card p-7">
+        <p class="text-gray-300 text-sm mb-5">"Diseñé el anillo de pedida desde el sofá de casa y la cita en el taller fue mágica. Nos recibieron con cava y la pieza era exactamente lo que imaginaba."</p>
+        <p class="font-semibold">— Marta R.</p>
+        <p class="text-xs text-gray-500">Córdoba capital</p>
+      </div>
+      <div class="card p-7">
+        <p class="text-gray-300 text-sm mb-5">"El configurador es una pasada, vi el precio cambiar al instante según lo que elegía. Nada de sorpresas. El grabado quedó perfecto."</p>
+        <p class="font-semibold">— Javier M.</p>
+        <p class="text-xs text-gray-500">Lucena</p>
+      </div>
+      <div class="card p-7">
+        <p class="text-gray-300 text-sm mb-5">"Trato cercano y artesanal de principio a fin. La presentación privada hizo que regalar la pulsera a mi madre fuera un momento inolvidable."</p>
+        <p class="font-semibold">— Lucía F.</p>
+        <p class="text-xs text-gray-500">Montilla</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section id="contacto" class="py-20 px-6 bg-[#0b0a0d]">
+  <div class="max-w-4xl mx-auto card p-12 text-center">
+    <h2 class="text-3xl md:text-4xl font-extrabold mb-4">¿Lista para crear la joya de tu vida?</h2>
+    <p class="text-gray-400 mb-8 max-w-xl mx-auto">Empieza ahora con el configurador y reserva tu cita privada. Estamos en pleno casco histórico de Córdoba, a un paso de la Mezquita-Catedral.</p>
+    <a href="#configurador" class="btn-primary inline-block">💍 Diseñar mi joya ahora</a>
+  </div>
+</section>
+
+<footer class="py-10 px-6 border-t border-white/5">
+  <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-gray-500">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 rounded-lg accent-bg flex items-center justify-center font-extrabold text-black text-sm">GL</div>
+      <span>GoldLine · Joyería artesanal · Córdoba</span>
+    </div>
+    <p>© 2026 GoldLine. Taller y showroom en el centro histórico de Córdoba.</p>
+  </div>
+</footer>
+
+<script>
+// ---------- Estado ----------
+const state = {
+  tipo: null, base: 0,
+  metal: null, metalExtra: 0, metalGrad: '',
+  piedra: null, piedraExtra: 0, piedraColor: '',
+  grabado: '',
+};
+const GRABADO_EXTRA = 25;
+
+// ---------- Helpers de selección ----------
+function selectGroup(containerId, dataAttr, cb){
+  const container = document.getElementById(containerId);
+  container.querySelectorAll('.opt').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      container.querySelectorAll('.opt').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      cb(btn);
+      updatePreview();
+      updatePrice();
+      updateResumen();
+    });
+  });
+}
+
+selectGroup('tipoOptions', 'tipo', (btn)=>{
+  state.tipo = btn.dataset.tipo;
+  state.base = parseInt(btn.dataset.base, 10);
+  document.getElementById('piezaLabel').textContent = btn.querySelector('span').textContent;
+});
+
+selectGroup('metalOptions', 'metal', (btn)=>{
+  state.metal = btn.dataset.metal;
+  state.metalExtra = parseInt(btn.dataset.extra, 10);
+  state.metalGrad = btn.dataset.grad;
+});
+
+selectGroup('piedraOptions', 'piedra', (btn)=>{
+  state.piedra = btn.dataset.piedra;
+  state.piedraExtra = parseInt(btn.dataset.extra, 10);
+  state.piedraColor = btn.dataset.color;
+});
+
+// ---------- Grabado ----------
+const grabadoInput = document.getElementById('grabadoInput');
+const contadorGrabado = document.getElementById('contadorGrabado');
+grabadoInput.addEventListener('input', ()=>{
+  state.grabado = grabadoInput.value;
+  contadorGrabado.textContent = 20 - state.grabado.length;
+  updatePreview();
+  updatePrice();
+  updateResumen();
+});
+
+// ---------- Vista previa ----------
+function updatePreview(){
+  const stage = document.getElementById('previewStage');
+  stage.innerHTML = '';
+
+  if(!state.tipo || !state.metal){
+    stage.innerHTML = '<p class="text-gray-600 text-sm text-center px-10">Elige tipo de pieza y metal para ver tu joya cobrar forma aquí ✨</p>';
+    return;
+  }
+
+  const grad = state.metalGrad;
+  const wrap = document.createElement('div');
+  wrap.className = 'fade-in relative flex items-center justify-center';
+
+  let html = '';
+  if(state.tipo === 'anillo'){
+    wrap.style.width = '180px'; wrap.style.height = '180px';
+    html += `<div class="ring-shape absolute" style="width:180px;height:180px;border:18px solid transparent;background:${grad};-webkit-mask:radial-gradient(circle,transparent 56%,#000 58%);mask:radial-gradient(circle,transparent 56%,#000 58%);"></div>`;
+    if(state.piedraColor){
+      html += `<span class="absolute rounded-full" style="width:20px;height:20px;top:6px;left:80px;background:${state.piedraColor};box-shadow:0 0 16px 2px ${state.piedraColor}aa"></span>`;
+    }
+  } else if(state.tipo === 'collar'){
+    wrap.style.width = '220px'; wrap.style.height = '180px';
+    html += `<div class="absolute" style="width:200px;height:140px;border-radius:0 0 200px 200px;border:10px solid transparent;background:${grad};-webkit-mask:radial-gradient(ellipse 100px 70px at 50% 0%, transparent 60%, #000 62%) bottom/100% 100% no-repeat;mask:radial-gradient(ellipse 100px 70px at 50% 0%, transparent 60%, #000 62%) bottom/100% 100% no-repeat;"></div>`;
+    html += `<div class="absolute rounded-full" style="width:160px;height:90px;top:10px;border:6px solid transparent;background:${grad};-webkit-mask:radial-gradient(ellipse,transparent 55%,#000 58%);mask:radial-gradient(ellipse,transparent 55%,#000 58%);"></div>`;
+    if(state.piedraColor){
+      html += `<span class="absolute rounded-full" style="width:22px;height:22px;bottom:32px;background:${state.piedraColor};box-shadow:0 0 18px 3px ${state.piedraColor}aa"></span>`;
+    } else {
+      html += `<span class="absolute rounded-full" style="width:14px;height:14px;bottom:38px;background:${grad}"></span>`;
+    }
+  } else if(state.tipo === 'pulsera'){
+    wrap.style.width = '220px'; wrap.style.height = '140px';
+    html += `<div class="absolute" style="width:210px;height:130px;border-radius:9999px;border:14px solid transparent;background:${grad};-webkit-mask:radial-gradient(ellipse,transparent 64%,#000 66%);mask:radial-gradient(ellipse,transparent 64%,#000 66%);"></div>`;
+    if(state.piedraColor){
+      html += `<span class="absolute rounded-full" style="width:18px;height:18px;right:18px;background:${state.piedraColor};box-shadow:0 0 16px 2px ${state.piedraColor}aa"></span>`;
+    }
+  }
+
+  wrap.innerHTML = html;
+  stage.appendChild(wrap);
+
+  if(state.grabado.trim()){
+    const tag = document.createElement('p');
+    tag.className = 'absolute bottom-3 text-[11px] text-gray-500 italic fade-in';
+    tag.textContent = `Grabado: "${state.grabado.trim()}"`;
+    stage.appendChild(tag);
+  }
+}
+
+// ---------- Precio ----------
+function updatePrice(){
+  const el = document.getElementById('precioTotal');
+  if(!state.tipo){ el.textContent = '0 €'; return; }
+  let total = state.base + state.metalExtra + state.piedraExtra;
+  if(state.grabado.trim().length > 0) total += GRABADO_EXTRA;
+  el.textContent = total.toLocaleString('es-ES') + ' €';
+  el.classList.remove('pulse');
+  void el.offsetWidth;
+  el.classList.add('pulse');
+}
+
+// ---------- Resumen ----------
+function updateResumen(){
+  const el = document.getElementById('resumenSel');
+  const partes = [];
+  if(state.tipo) partes.push(document.querySelector(`[data-tipo="${state.tipo}"] span`).textContent);
+  if(state.metal) partes.push(document.querySelector(`[data-metal="${state.metal}"] span:nth-child(2)`).textContent);
+  if(state.piedra) partes.push(document.querySelector(`[data-piedra="${state.piedra}"] span:nth-child(2)`).textContent);
+  if(state.grabado.trim()) partes.push('grabado personalizado');
+  el.textContent = partes.length ? partes.join(' · ') : 'Selecciona tus opciones';
+}
+
+// ---------- Reserva VIP ----------
+const vipPanel = document.getElementById('vipPanel');
+const btnReservar = document.getElementById('btnReservar');
+const btnConfirmar = document.getElementById('btnConfirmarCita');
+const confirmacionMsg = document.getElementById('confirmacionMsg');
+let franjaSeleccionada = null;
+
+btnReservar.addEventListener('click', ()=>{
+  if(!state.tipo || !state.metal || !state.piedra){
+    btnReservar.textContent = 'Completa tu diseño primero ↑';
+    setTimeout(()=>{ btnReservar.textContent = 'Reservar presentación privada'; }, 1800);
+    return;
+  }
+  vipPanel.classList.remove('hidden');
+  vipPanel.scrollIntoView({behavior:'smooth', block:'center'});
+});
+
+document.getElementById('franjasOptions').querySelectorAll('.opt').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.getElementById('franjasOptions').querySelectorAll('.opt').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    franjaSeleccionada = { fecha: btn.dataset.fecha, hora: btn.dataset.hora };
+    btnConfirmar.disabled = false;
+    btnConfirmar.classList.remove('opacity-50');
+    confirmacionMsg.classList.add('hidden');
+  });
+});
+
+btnConfirmar.addEventListener('click', ()=>{
+  if(!franjaSeleccionada) return;
+  confirmacionMsg.classList.remove('hidden');
+  confirmacionMsg.innerHTML = `
+    <p class="text-lg font-semibold accent mb-1">Cita confirmada ✨</p>
+    <p class="text-gray-300 text-sm">Tu joyero te recibirá en privado el <strong>${franjaSeleccionada.fecha}</strong> a las <strong>${franjaSeleccionada.hora}</strong> para presentarte tu pieza, diseñada a tu medida en GoldLine.</p>
+  `;
+  confirmacionMsg.scrollIntoView({behavior:'smooth', block:'center'});
+});
+
+// init
+updatePreview();
+updatePrice();
+updateResumen();
+</script>
+</body>
+</html>
